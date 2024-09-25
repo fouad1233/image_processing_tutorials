@@ -39,7 +39,7 @@ class Image_analyzer():
             image_array = np.frombuffer(image_data, dtype=np.uint8)
             # Reshape the image to matrix
             image_array = image_array.reshape((height, width))
-            self.image_array = image_array
+            self.image_array = image_array.copy()
             self.width = width
             self.height = height
             self.max_pixel_value = max_pixel_value
@@ -63,6 +63,34 @@ class Image_analyzer():
             # Write the image data
             f.write(image_array.tobytes())
         print('Image written to:', image_path)
+    def draw_straight_line(self, x1, x2, y1, y2,):
+        if  self.image_array.all() is None:
+            raise ValueError('Please read an image first')
+        #check out bounds of the image array
+        if  x1 < 0 or x1 > self.height      \
+            or x2 < 0 or x2 > self.height   \
+            or y1 < 0 or y1 > self.width  \
+            or y2 < 0 or y2 > self.width:
+            raise ValueError('Coordinates out of bounds')
+        for i in range(x1, x2):
+            for j in range(y1, y2):
+                self.image_array[i][j] = 0 
+    def draw_vertical_line(self, y1, y2):
+        self.draw_straight_line(0, self.height, y1, y2)
+    def draw_horizontal_line(self, x1, x2):
+        self.draw_straight_line(x1, x2, 0 , self.width)
+        
+    #Illustration functions
+    def show_image(self):
+        if  self.image_array.all() is None:
+            raise ValueError('Please read an image first or use show_image_from_array')
+        plt.title(self.image_path)
+        plt.imshow(self.image_array, cmap='gray')
+    def show_image_from_array(self, image_array):
+        plt.imshow(image_array, cmap='gray')
+    
+        
+    # Getters and setters
     def get_image_path(self):
         return self.image_path
     def set_image_path(self, image_path):
