@@ -2,9 +2,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 class Image_analyzer():
-    def __init__(self):
-        pass
-    def image_read(self, image_path):
+    def __init__(self , image_path = None):
+        self.image_path = image_path
+        self.image_array = None
+        self.width = None
+        self.height = None
+        self.max_pixel_value = None
+        
+    def image_read(self, image_path = None):
+        if image_path == None and self.image_path == None:
+            raise ValueError('Please provide an image path')
+        if image_path == None:
+            image_path = self.image_path
+        print('Reading image from:', image_path)
         # Read pgm image from file
         with open(image_path, 'rb') as f:
             # Read the header of the image
@@ -29,8 +39,19 @@ class Image_analyzer():
             image_array = np.frombuffer(image_data, dtype=np.uint8)
             # Reshape the image to matrix
             image_array = image_array.reshape((height, width))
+            self.image_array = image_array
+            self.width = width
+            self.height = height
+            self.max_pixel_value = max_pixel_value
             return image_array, width, height, max_pixel_value
-    def image_write(self, image_array, width, height, max_pixel_value, image_path):
+    def image_write(self, width, height, max_pixel_value, image_array = None,image_path = None):
+        if image_path == None and self.image_path == None:
+            raise ValueError('Please provide an image path')
+        if image_path == None:
+            image_path = self.image_path
+        self.width = width
+        self.height = height
+        self.max_pixel_value = max_pixel_value
         # Write pgm image to file
         with open(image_path, 'wb') as f:
             # Write the header of the image
@@ -42,4 +63,20 @@ class Image_analyzer():
             # Write the image data
             f.write(image_array.tobytes())
         print('Image written to:', image_path)
+    def get_image_path(self):
+        return self.image_path
+    def set_image_path(self, image_path):
+        self.image_path = image_path
+    def get_image_array(self):
+        return self.image_array
+    def get_image_width(self):
+        return self.width
+    def set_image_width(self, width):
+        self.width = width
+    def get_image_height(self):
+        return self.height
+    def set_image_height(self, height):
+        self.height = height
+    
+    
         

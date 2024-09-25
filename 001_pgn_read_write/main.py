@@ -15,4 +15,4 @@ plt.imshow(image_array, cmap='gray')
 plt.show()
 
 #write the image to a new file
-analyzer.image_write(image_array, width, height, max_pixel_value, file_dir+'/'+'prague_copy.pgm')
+analyzer.image_write(width, height, max_pixel_value,image_array, file_dir+'/'+'prague_copy.pgm')
