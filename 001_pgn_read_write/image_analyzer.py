@@ -61,7 +61,7 @@ class Image_analyzer():
         if image_array.all() is None and self.image_array.all() is None:
             raise ValueError('Please provide an image array or read an image first')
         elif image_array.all() is None:
-            image_array = self.image
+            image_array = self.image_array
         
         if image_path == None and self.image_path == None:
             raise ValueError('Please provide an image path')
