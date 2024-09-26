@@ -44,7 +44,23 @@ class Image_analyzer():
             self.height = height
             self.max_pixel_value = max_pixel_value
             return image_array, width, height, max_pixel_value
-    def image_write(self, width, height, max_pixel_value, image_array = None,image_path = None):
+    def image_write(self, width = None, height = None, max_pixel_value = None, image_array = None ,image_path = None):
+        if width == None and self.width == None:
+            raise ValueError('Please provide a width value or read an image first')
+        elif width == None:
+            width = self.width
+        if height == None and self.height == None:
+            raise ValueError('Please provide a height value or read an image first')
+        elif height == None:
+            height = self.height
+        if max_pixel_value == None and self.max_pixel_value == None:
+            raise ValueError('Please provide a max pixel value or read an image first')
+        elif max_pixel_value == None:
+            max_pixel_value = self.max_pixel_value
+        if type(image_array) == None and type(self.image_array) == None:
+            raise ValueError('Please provide an image array')
+        elif type(image_array) == None:
+            image_array = self.image
         if image_path == None and self.image_path == None:
             raise ValueError('Please provide an image path')
         if image_path == None:
@@ -84,7 +100,6 @@ class Image_analyzer():
     def show_image(self):
         if  self.image_array.all() is None:
             raise ValueError('Please read an image first or use show_image_from_array')
-        plt.title(self.image_path)
         plt.imshow(self.image_array, cmap='gray')
     def show_image_from_array(self, image_array):
         plt.imshow(image_array, cmap='gray')
