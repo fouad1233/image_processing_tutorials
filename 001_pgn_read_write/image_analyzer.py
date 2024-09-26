@@ -57,10 +57,12 @@ class Image_analyzer():
             raise ValueError('Please provide a max pixel value or read an image first')
         elif max_pixel_value == None:
             max_pixel_value = self.max_pixel_value
-        if type(image_array) == None and type(self.image_array) == None:
-            raise ValueError('Please provide an image array')
-        elif type(image_array) == None:
+        image_array = np.array(image_array)
+        if image_array.all() is None and self.image_array.all() is None:
+            raise ValueError('Please provide an image array or read an image first')
+        elif image_array.all() is None:
             image_array = self.image
+        
         if image_path == None and self.image_path == None:
             raise ValueError('Please provide an image path')
         if image_path == None:
