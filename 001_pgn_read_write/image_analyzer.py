@@ -115,9 +115,9 @@ class Image_analyzer():
     def show_image(self):
         if  self.image_array.all() is None:
             raise ValueError('Please read an image first or use show_image_from_array')
-        plt.imshow(self.image_array, cmap='gray')
+        plt.imshow(self.image_array, cmap='gray', vmin=0, vmax=255)
     def show_image_from_array(self, image_array):
-        plt.imshow(image_array, cmap='gray')
+        plt.imshow(image_array, cmap='gray', vmin=0, vmax=255)
     
         
     # Getters and setters
