@@ -140,17 +140,18 @@ class Image_analyzer():
     def image_array_scale(self, image_array: np.ndarray):
         if np.min(image_array) < 0:
             image_array = image_array + abs( np.min(image_array))
-        if np.max(image_array) > 255:
-            image_array = image_array * 255 / np.max(image_array)
-        #convert to uint8
-        #image_array = image_array.astype(np.uint8)
+        
+        #linear scale according to the max pixel value
+        image_array = image_array * 255 / np.max(image_array)
+        #convert to integer
+        image_array = np.array(image_array, dtype=np.uint8)
         return image_array
     
     def myImageNegative(self):
         return self.max_pixel_value - self.image_array
 
     def myImageLogTransform(self, c = 1):
-        return self.image_array_scale(c * np.log10(np.ones(self.image_array.shape) + self.image_array))
+        return self.image_array_scale(c * np.log(np.ones(self.image_array.shape) + self.image_array))
     
     def myImageGammaTransform(self, gamma = 1, c = 1):
         return self.image_array_scale(c * np.power(self.image_array, gamma))
@@ -159,8 +160,12 @@ class Image_analyzer():
         g = np.zeros((self.height, self.width))
         for x in range (self.height):
             for y in range(self.width):
-                g[x][y] = np.median(self.image_array[x:x+kernel_size, y:y+kernel_size])
-        g = self.image_array_scale(g)
+                values = []
+                for s in range(-kernel_size//2,kernel_size//2):
+                    for t in range(-kernel_size//2,kernel_size//2):
+                        if x+s >= 0 and x+s < self.height and y+t >= 0 and y+t < self.width:
+                            values.append(self.image_array[x+s][y+t])
+                g[x][y] = np.median(values)
         return g
     
         
