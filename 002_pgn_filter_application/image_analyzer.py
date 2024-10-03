@@ -9,7 +9,7 @@ class Image_analyzer():
         self.height = None
         self.max_pixel_value = None
         
-    def image_read(self, image_path = None):
+    def mypgmread(self, image_path = None):
         if image_path == None and self.image_path == None:
             raise ValueError('Please provide an image path')
         if image_path == None:
@@ -44,7 +44,7 @@ class Image_analyzer():
             self.height = height
             self.max_pixel_value = max_pixel_value
             return image_array, width, height, max_pixel_value
-    def image_write(self, width = None, height = None, max_pixel_value = None, image_array = None ,image_path = None):
+    def mypgmwrite(self, width = None, height = None, max_pixel_value = None, image_array = None ,image_path = None):
         if width == None and self.width == None:
             raise ValueError('Please provide a width value or read an image first')
         elif width == None:
@@ -119,7 +119,7 @@ class Image_analyzer():
     def show_image_from_array(self, image_array):
         plt.imshow(image_array, cmap='gray', vmin=0, vmax=255)
     
-    def apply_kernel(self, kernel):
+    def myImageCorrelation(self, kernel):
         g = np.zeros((self.height, self.width))
         kernel_height, kernel_width = kernel.shape
         for x in range (self.height):
