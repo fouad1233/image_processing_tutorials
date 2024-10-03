@@ -131,7 +131,7 @@ class Image_analyzer():
                             g[x][y] += kernel[s][t] * self.image_array[x+s][y+t]
                         
                     
-        
+        g = self.image_array_scale(g)
         return g
     
     
