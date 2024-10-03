@@ -119,6 +119,7 @@ class Image_analyzer():
     def show_image_from_array(self, image_array):
         plt.imshow(image_array, cmap='gray', vmin=0, vmax=255)
     
+    
     def myImageCorrelation(self, kernel):
         g = np.zeros((self.height, self.width))
         kernel_height, kernel_width = kernel.shape
@@ -132,7 +133,28 @@ class Image_analyzer():
                     
         
         return g
-            
+    
+    
+    
+    # Image scaling between 0 and 255
+    def image_array_scale(self, image_array: np.ndarray):
+        if np.min(image_array) < 0:
+            image_array = image_array + abs( np.min(image_array))
+        if np.max(image_array) > 255:
+            image_array = image_array * 255 / np.max(image_array)
+        #convert to uint8
+        #image_array = image_array.astype(np.uint8)
+        return image_array
+    
+    def myImageNegative(self):
+        return self.max_pixel_value - self.image_array
+
+    def myImageLogTransform(self, c = 1):
+        return self.image_array_scale(c * np.log10(np.ones(self.image_array.shape) + self.image_array))
+    
+    def myImageGammaTransform(self, gamma = 1, c = 1):
+        return self.image_array_scale(c * np.power(self.image_array, gamma))
+    
         
     # Getters and setters
     def get_image_path(self):
