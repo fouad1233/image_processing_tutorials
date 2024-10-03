@@ -155,6 +155,14 @@ class Image_analyzer():
     def myImageGammaTransform(self, gamma = 1, c = 1):
         return self.image_array_scale(c * np.power(self.image_array, gamma))
     
+    def myImageMedianFilter(self, kernel_size = 3):
+        g = np.zeros((self.height, self.width))
+        for x in range (self.height):
+            for y in range(self.width):
+                g[x][y] = np.median(self.image_array[x:x+kernel_size, y:y+kernel_size])
+        g = self.image_array_scale(g)
+        return g
+    
         
     # Getters and setters
     def get_image_path(self):
