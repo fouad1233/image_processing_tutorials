@@ -137,6 +137,8 @@ class Image_analyzer():
     def image_array_scale(self, image_array: np.ndarray):
         if np.min(image_array) < 0:
             image_array = image_array + abs( np.min(image_array))
+        if np.min(image_array) > 0:
+            image_array = image_array - np.min(image_array)
         
         #linear scale according to the max pixel value
         image_array = image_array * 255 / np.max(image_array)
