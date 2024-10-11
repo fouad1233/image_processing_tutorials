@@ -167,7 +167,15 @@ class Image_analyzer():
                 g[x][y] = np.median(values)
         return g
     
-    
+    def myImageHistogramEqualization(self):
+        g = np.zeros((self.height, self.width))
+        hist, bins = np.histogram(self.image_array.flatten(),256,[0,256])
+        cdf = hist.cumsum()
+        cdf_normalized = cdf * hist.max()/ cdf.max()
+        for x in range (self.height):
+            for y in range(self.width):
+                g[x][y] = cdf_normalized[self.image_array[x][y]]
+        return g
     # Getters and setters
     def get_image_path(self):
         return self.image_path
