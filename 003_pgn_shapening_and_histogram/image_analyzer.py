@@ -176,6 +176,13 @@ class Image_analyzer():
             for y in range(self.width):
                 g[x][y] = cdf_normalized[self.image_array[x][y]]
         return g
+    
+    def get_gaussian_filter(self, size, sigma):
+        filter = np.zeros((size, size))
+        for x in range(size):
+            for y in range(size):
+                filter[x][y] = np.exp(-((x - size//2)**2 + (y - size//2)**2) / (2 * sigma**2))
+        return filter/np.sum(filter)
     # Getters and setters
     def get_image_path(self):
         return self.image_path
