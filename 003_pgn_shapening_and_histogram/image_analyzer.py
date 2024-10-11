@@ -128,8 +128,7 @@ class Image_analyzer():
                 for s in range(-kernel_height//2,kernel_height//2):
                     for t in range(-kernel_width//2,kernel_width//2):
                         if x+s >= 0 and x+s < self.height and y+t >= 0 and y+t < self.width:
-                            g[x][y] += kernel[s][t] * self.image_array[x+s][y+t]
-                    
+                            g[x][y] += kernel[s][t] * self.image_array[x+s][y+t]                    
         return g
     
     
@@ -149,10 +148,10 @@ class Image_analyzer():
         return self.max_pixel_value - self.image_array
 
     def myImageLogTransform(self, c = 1):
-        return self.image_array_scale(c * np.log(np.ones(self.image_array.shape) + self.image_array))
+        return (c * np.log(np.ones(self.image_array.shape) + self.image_array))
     
     def myImageGammaTransform(self, gamma = 1, c = 1):
-        return self.image_array_scale(c * np.power(self.image_array, gamma))
+        return (c * np.power(self.image_array, gamma))
     
     def myImageMedianFilter(self, kernel_size = 3):
         g = np.zeros((self.height, self.width))
