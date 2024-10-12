@@ -171,11 +171,17 @@ class Image_analyzer():
         g = np.zeros((self.height, self.width))
         hist, bins = np.histogram(self.image_array.flatten(),256,[0,256])
         cdf = hist.cumsum()
-        cdf_normalized = cdf * hist.max()/ cdf.max()
+        cdf_normalized = cdf / cdf.max()
         for x in range (self.height):
             for y in range(self.width):
                 g[x][y] = cdf_normalized[self.image_array[x][y]]
         return g
+    
+    def myImageNormalizedCdf(self , image_array : np.ndarray):
+        hist, bins = np.histogram(image_array.flatten(),256,[0,256])
+        cdf = hist.cumsum()
+        cdf_normalized = cdf / cdf.max()
+        return cdf_normalized
     
     def get_gaussian_filter(self, size, sigma):
         filter = np.zeros((size, size))
