@@ -190,15 +190,71 @@ class Image_analyzer():
                 filter[x][y] = np.exp(-((x - size//2)**2 + (y - size//2)**2) / (2 * sigma**2))
         return filter/np.sum(filter)
     
-    def myImageFourierTransform(self):
+    def my2Dfft(self, image_array = None):
+        try :
+            if image_array == None :
+                image_array = self.image_array
+        except:
+            pass
         #first take the fft for the rows in one dimention then for coulumns 
-        fourier_image = np.zeros(self.image_array.shape, dtype=complex)
+        fourier_image = np.zeros(image_array.shape, dtype=complex)
         for x in range(self.height):
-            fourier_image[x] = np.fft.fft(self.image_array[x])
+            fourier_image[x] = np.fft.fft(image_array[x])
         for y in range(self.width):
             fourier_image[:,y] = np.fft.fft(fourier_image[:,y])
         
         return fourier_image
+    def my2Dfftshifted(self, image_array = None):
+        try :
+            if image_array == None :
+                image_array = self.image_array
+        except:
+            pass
+        mask = np.zeros(image_array.shape)
+        for  x in range(image_array.shape[0]):
+            for y in range(image_array.shape[1]):
+                mask[x][y] = (-1)**(x+y)
+        image_array = image_array * mask
+        return self.my2Dfft(image_array)
+    def my2Difft(self, fourier_image):
+        try :
+            if fourier_image == None :
+                fourier_image = self.image_array
+        except:
+            pass
+        f_conj_MN = self.my2Dfft(np.conj(fourier_image))
+        f_MN = np.conj(f_conj_MN)
+        f = f_MN / (self.height * self.width)
+        return f
+        
+        
+    
+    
+    def my1Dft(self, array_1d : np.ndarray):
+        #take the fourier transform using the classic formula
+        #check if the array is 1D
+        if len(array_1d.shape) != 1:
+            raise ValueError('Please provide a 1D array')
+        fourier_array = np.zeros(array_1d.shape, dtype=complex)
+        N = len(array_1d)
+        for k in range(N):
+            for n in range(N):
+                fourier_array[k] += array_1d[n] * np.exp( -1j*(2 * np.pi/N)* k * n)
+        return fourier_array
+    
+    def my2Dft(self):
+        if len(self.image_array.shape) != 2:
+            raise ValueError('Please provide a 2D array')
+        #first take the fft for the rows in one dimention then for coulumns 
+        fourier_array = np.zeros(self.image_array.shape, dtype=complex)
+        for x in range(self.image_array.shape[0]):
+            fourier_array[x] = self.my1Dft(self.image_array[x])
+        for y in range(self.image_array.shape[1]):
+            fourier_array[:,y] = self.my1Dft(fourier_array[:,y])
+        
+        return fourier_array
+    
+        
     
     # Getters and setters
     def get_image_path(self):
