@@ -190,18 +190,24 @@ class Image_analyzer():
                 filter[x][y] = np.exp(-((x - size//2)**2 + (y - size//2)**2) / (2 * sigma**2))
         return filter/np.sum(filter)
     
-    def my2Dfft(self, image_array = None):
+    def my2Dfft(self, image_array = None, m_point = None, n_point = None):
         try :
             if image_array == None :
                 image_array = self.image_array
         except:
             pass
+        height, width = image_array.shape
+        if m_point == None:
+            m_point = height
+        if n_point == None:
+            n_point = width
+        
         #first take the fft for the rows in one dimention then for coulumns 
-        fourier_image = np.zeros(image_array.shape, dtype=complex)
-        for x in range(self.height):
-            fourier_image[x] = np.fft.fft(image_array[x])
-        for y in range(self.width):
-            fourier_image[:,y] = np.fft.fft(fourier_image[:,y])
+        fourier_image = np.zeros( shape=(m_point, n_point), dtype=complex)
+        for x in range(height):
+            fourier_image[x] = np.fft.fft(image_array[x], n = n_point)
+        for y in range(n_point):
+            fourier_image[:,y] = np.fft.fft(fourier_image[:,y], n = m_point)
         
         return fourier_image
     def my2Dfftshifted(self, image_array = None):
@@ -216,15 +222,16 @@ class Image_analyzer():
                 mask[x][y] = (-1)**(x+y)
         image_array = image_array * mask
         return self.my2Dfft(image_array)
-    def my2Difft(self, fourier_image):
+    def my2Difft(self, fourier_image, m_point = None, n_point = None):
         try :
             if fourier_image == None :
                 fourier_image = self.image_array
         except:
             pass
-        f_conj_MN = self.my2Dfft(np.conj(fourier_image))
+        f_conj_MN = self.my2Dfft(np.conj(fourier_image) , m_point, n_point)
+        height, width = fourier_image.shape
         f_MN = np.conj(f_conj_MN)
-        f = f_MN / (self.height * self.width)
+        f = f_MN / (height * width)
         return f
         
         
