@@ -276,6 +276,29 @@ class Image_analyzer():
                 converged = True
             T = T_new
         return T, self.image_array > T
+    def myImageGlobalTresholdingOtsu(self):
+        #this function calculates the global threshold value and return thid value with the tresholded image
+        M = self.height
+        N = self.width
+        hist, bins = np.histogram(self.image_array.flatten(),256,[0,256])
+        p = hist / (M * N)
+        sigma_b = np.zeros(256)
+        mu1_old = 0
+        q1_old = 0
+        for t in range(256):
+            q1 = q1_old + p[t]
+            q2 = 1 - q1
+            if q1 > 0:
+                mu1 = (mu1_old * q1_old + t * p[t]) / q1
+            if q2 > 0:
+                mu2 = (np.mean(self.image_array) - mu1 * q1) / q2
+            sigma_b[t] = q1 * q2 * (mu1 - mu2)**2
+            q1_old = q1
+            mu1_old = mu1
+        best_t = np.argmax(sigma_b)
+        return best_t, self.image_array > best_t
+            
+            
         
     
         
