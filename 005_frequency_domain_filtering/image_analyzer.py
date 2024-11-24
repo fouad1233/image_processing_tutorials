@@ -120,15 +120,16 @@ class Image_analyzer():
         plt.imshow(image_array, cmap='gray', vmin=0, vmax=255)
     
     
-    def myImageCorrelation(self, kernel):
-        g = np.zeros((self.height, self.width))
+    def myImageCorrelation(self, kernel : np.ndarray):
+        g = np.zeros((self.height, self.width))    
         kernel_height, kernel_width = kernel.shape
-        for x in range (self.height):
+        for x in range(self.height):
             for y in range(self.width):
-                for s in range(-kernel_height//2 +1,kernel_height//2 + 1):
-                    for t in range(-kernel_width//2 + 1,kernel_width//2 + 1):
-                        if x+s >= 0 and x+s < self.height and y+t >= 0 and y+t < self.width:
-                            g[x][y] += kernel[s+ kernel_height//2][t + kernel_width//2] * self.image_array[x + s][y+t]                    
+                for s in range(-kernel_height//2 + 1, kernel_height//2 + 1):
+                    for t in range(-kernel_width//2 + 1, kernel_width//2 + 1):
+                        if 0 <= x + s < self.height and 0 <= y + t < self.width \
+                            and 0 <= s + kernel_height//2 < kernel_height and 0 <= t + kernel_width//2 < kernel_width:
+                            g[x][y] += kernel[s + kernel_height // 2][t + kernel_width // 2] * self.image_array[x + s][y + t]        
         return g
     
     
