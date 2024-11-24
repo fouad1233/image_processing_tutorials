@@ -261,6 +261,23 @@ class Image_analyzer():
         
         return fourier_array
     
+    def myImageBasicGlobalTresholding(self, dt = 0.1):
+        #this function calculates the global threshold value and return thid value with the tresholded image
+        M = self.height
+        N = self.width
+        #T = np.sum(self.image_array) / (M*N)
+        T = np.mean(self.image_array)
+        converged = False
+        while not converged:
+            g1 = self.image_array[self.image_array <= T]
+            g2 = self.image_array[self.image_array > T]
+            T_new = 0.5 * (np.mean(g1) + np.mean(g2))
+            if abs(T_new - T) < dt:
+                converged = True
+            T = T_new
+        return T, self.image_array > T
+        
+    
         
     
     # Getters and setters
