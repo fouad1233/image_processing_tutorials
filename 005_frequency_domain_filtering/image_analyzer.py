@@ -136,16 +136,9 @@ class Image_analyzer():
     
     # Image scaling between 0 and 255
     def image_array_scale(self, image_array: np.ndarray):
-        if np.min(image_array) < 0:
-            image_array = image_array + abs( np.min(image_array))
-        if np.min(image_array) > 0:
-            image_array = image_array - np.min(image_array)
-        
-        #linear scale according to the max pixel value
-        image_array = image_array * 255 / np.max(image_array)
-        #convert to integer
-        image_array = np.array(image_array, dtype=np.uint8)
-        return image_array
+        min_val, max_val = np.min(image_array), np.max(image_array)
+        normalized_data = [[np.uint8((i-min_val)/(max_val-min_val)*255) for i in row] for row in image_array]
+        return normalized_data
     
     def myImageNegative(self):
         return self.max_pixel_value - self.image_array
