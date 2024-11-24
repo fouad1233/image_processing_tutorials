@@ -297,7 +297,29 @@ class Image_analyzer():
             mu1_old = mu1
         best_t = np.argmax(sigma_b)
         return best_t, self.image_array > best_t
-            
+    
+    def myImageLocalTresholdingAverage(self, kernel_size=3, b=1.0):
+        
+        # Padding size (half of kernel size)
+        pad_size = kernel_size // 2
+        
+        # Pad the image with reflection mode
+        padded_image = np.pad(self.image_array, pad_size, mode='reflect')
+        
+        # Initialize the moving average result array
+        moving_avg = np.zeros_like(self.image_array, dtype=float)
+        
+        # Compute the moving average
+        for i in range(self.image_array.shape[0]):
+            for j in range(self.image_array.shape[1]):
+                # Extract the local region
+                local_region = padded_image[i:i+kernel_size, j:j+kernel_size]
+                # Compute the mean
+                moving_avg[i, j] = np.mean(local_region)
+        
+        local_threshold = b * moving_avg
+        thresholded_image = self.image_array > local_threshold
+        return thresholded_image
             
         
     
